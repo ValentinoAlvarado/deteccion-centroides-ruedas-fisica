@@ -1,0 +1,13 @@
+# Evita subir configuraciones del editor
+.idea/
+
+# Entorno virtual local
+.venv/
+
+# Archivos grandes y binarios de modelos
+*.pt
+*.mp4
+
+# Caché de Python
+__pycache__/
+*.pyc
