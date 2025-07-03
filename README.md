@@ -63,26 +63,69 @@ Esta sección presenta gráficos de diagnóstico generados en R para validar los
 #### QQ-Plot de residuales studentizados  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/qqplot.png" width="500"/>
 
+**Interpretación:**  
+Este gráfico evalúa si los residuales siguen una distribución normal. Como los puntos se alinean aproximadamente con la línea de referencia (45°), se sugiere que los errores del modelo se distribuyen normalmente, lo cual valida el supuesto de normalidad.
+
+---
+
 #### Histograma de residuales  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/hist_residuales.png" width="450"/>
+
+**Interpretación:**  
+El histograma muestra una forma aproximadamente simétrica y de campana, indicando una distribución cercana a la normal para los residuales. Esto apoya el uso de inferencia basada en mínimos cuadrados.
+
+---
 
 #### Boxplot de residuales  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/boxplot.png" width="400"/>
 
+**Interpretación:**  
+El boxplot confirma que los residuales están centrados cerca de cero y no hay presencia significativa de outliers extremos. Esto es indicativo de una distribución razonablemente controlada.
+
+---
+
 #### Residuales estandarizados vs ajustados  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_ajustados.png" width="520"/>
+
+**Interpretación:**  
+Este gráfico sirve para detectar heterocedasticidad. Dado que los puntos no muestran un patrón cónico o curvo evidente, se sugiere que la varianza de los errores es aproximadamente constante a lo largo de los valores ajustados.
+
+---
 
 #### Residuales estandarizados vs distancia d  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_distancia_d.png" width="520"/>
 
+**Interpretación:**  
+Aquí se explora si hay una relación entre la distancia multivariada de cada observación y sus residuos. Un patrón aleatorio sugiere que no hay dependencia estructural relacionada con la posición en el espacio de diseño.
+
+---
+
 #### Residuales vs orden  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_orden.png" width="450"/>
+
+**Interpretación:**  
+Este gráfico permite detectar autocorrelación temporal. Si los puntos fluctúan aleatoriamente alrededor de cero, como en este caso, no hay evidencia clara de dependencia serial.
+
+---
 
 #### Residuales studentizados vs leverage  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/studentized_vs_leverage.png" width="520"/>
 
+**Interpretación:**  
+Este gráfico combina información sobre la magnitud de los residuos y el apalancamiento. Observaciones alejadas horizontalmente (alto leverage) y verticalmente (residuales extremos) pueden ser influyentes. Aquí se observan algunos puntos con mayor leverage que deben ser revisados.
+
+---
+
 #### Residuales estandarizados vs distancia de Cook  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/cookd_vs_residuals.png" width="520"/>
 
+**Interpretación:**  
+Este gráfico revela el posible impacto de cada observación sobre los coeficientes del modelo. La forma parabólica invertida observada es típica y esperada; sin embargo, puntos extremos en el eje de Cook pueden indicar observaciones influyentes.
+
+---
+
 #### Parabola con IC e IP  
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/ajuste_parabola_ic_ip.png" width="600"/>
+
+**Interpretación:**  
+La curva roja representa el ajuste cuadrático del modelo. Las bandas rojas punteadas son los intervalos de confianza del 95% (IC) para el valor promedio, mientras que las bandas verdes representan los intervalos de predicción del 95% (IP) para nuevas observaciones. El modelo parece ajustarse bien al conjunto de datos.
