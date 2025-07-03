@@ -56,32 +56,33 @@ Esta sección presenta gráficos de diagnóstico generados en R para validar los
 > ⚠️ **Nota:**  
 > Estas figuras no fueron generadas por el sistema principal, sino por un script externo en R como referencia estadística.
 
+---
+
 ### Figuras de referencia:
 
 #### QQ-Plot de residuales studentizados  
-![QQ-Plot](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/qqplot.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/qqplot.png" width="500"/>
 
 #### Histograma de residuales  
-![Histograma](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/hist_residuales.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/hist_residuales.png" width="450"/>
 
 #### Boxplot de residuales  
-![Boxplot](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/boxplot.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/boxplot.png" width="400"/>
 
 #### Residuales estandarizados vs ajustados  
-![Ajustados](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_ajustados.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_ajustados.png" width="520"/>
 
 #### Residuales estandarizados vs distancia d  
-![Distancia d](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_distancia_d.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_distancia_d.png" width="520"/>
 
 #### Residuales vs orden  
-![Orden](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_orden.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_orden.png" width="450"/>
 
 #### Residuales studentizados vs leverage  
-![Leverage](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/studentized_vs_leverage.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/studentized_vs_leverage.png" width="520"/>
 
 #### Residuales estandarizados vs distancia de Cook  
-![CookD](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/cookd_vs_residuals.png)
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/cookd_vs_residuals.png" width="520"/>
 
 #### Parabola con IC e IP  
-![Parábola](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/ajuste_parabola_ic_ip.png)
-
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/ajuste_parabola_ic_ip.png" width="600"/>
