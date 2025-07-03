@@ -54,6 +54,8 @@ Esta sección presenta gráficos de diagnóstico generados en R para validar los
 > ⚠️ **Nota:**  
 > Estas figuras no fueron generadas por el sistema principal, sino por un script externo en R como referencia estadística.
 
+```
+
 ---
 
 ### Figuras de referencia:
