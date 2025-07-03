@@ -43,47 +43,45 @@ source .venv/bin/activate  # Linux/macOS
 
 El archivo `wheel.pt` no se encuentra en este repositorio debido a su tamaño.
 
+📁 Puedes descargarlo desde esta carpeta de Google Drive:
+
+🔗 [Abrir carpeta en Google Drive](https://drive.google.com/drive/folders/1y4VoyEVsQyzBrG7d4gqcnFJ6SJHvPHq1?usp=drive_link)
+
 ## 📊 Comparación con método tradicional (R)
 
-Esta sección presenta gráficos de diagnóstico y resultados estadísticos generados mediante **R**, utilizando métodos clásicos de regresión por mínimos cuadrados.  
-Su propósito es **comparar los resultados** con los obtenidos por nuestro software automatizado, como parte del proceso de validación.
+Esta sección presenta gráficos de diagnóstico generados en R para validar los resultados obtenidos con nuestro software.
 
 > ⚠️ **Nota:**  
-> Las siguientes imágenes **no fueron generadas por el software principal de este repositorio**, sino por scripts auxiliares escritos en R.  
-> Se incluyen **solo como referencia comparativa** para verificar la concordancia entre ambos enfoques.
+> Estas figuras no fueron generadas por el sistema principal, sino por un script externo en R como referencia estadística.
 
 ---
 
 ### Figuras de referencia:
 
-#### QQ-Plot de residuales studentizados
-![QQ-Plot](imagenes/qqplot.png)
+#### QQ-Plot de residuales studentizados  
+![QQ-Plot](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/qqplot.png)
 
-#### Histograma de residuales
-![Histograma](imagenes/hist_residuales.png)
+#### Histograma de residuales  
+![Histograma](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/hist_residuales.png)
 
-#### Boxplot de residuales
-![Boxplot](imagenes/boxplot.png)
+#### Boxplot de residuales  
+![Boxplot](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/boxplot.png)
 
-#### Residuales estandarizados vs valores ajustados
-![Ajustados](imagenes/residuales_ajustados.png)
+#### Residuales estandarizados vs ajustados  
+![Ajustados](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_ajustados.png)
 
-#### Residuales estandarizados vs distancia d
-![Distancia d](imagenes/residuales_distancia_d.png)
+#### Residuales estandarizados vs distancia d  
+![Distancia d](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_distancia_d.png)
 
-#### Residuales vs orden de observación
-![Orden](imagenes/residuales_orden.png)
+#### Residuales vs orden  
+![Orden](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/residuales_orden.png)
 
-#### Residuales studentizados vs leverage
-![Leverage](imagenes/studentized_vs_leverage.png)
+#### Residuales studentizados vs leverage  
+![Leverage](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/studentized_vs_leverage.png)
 
-#### Residuales estandarizados vs distancia de Cook
-![CookD](imagenes/cookd_vs_residuals.png)
+#### Residuales estandarizados vs distancia de Cook  
+![CookD](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/cookd_vs_residuals.png)
 
-#### Ajuste cuadrático con intervalos de confianza y predicción
-![Parábola](imagenes/ajuste_parabola_ic_ip.png)
+#### Parabola con IC e IP  
+![Parábola](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/ajuste_parabola_ic_ip.png)
 
-
-📁 Puedes descargarlo desde esta carpeta de Google Drive:
-
-🔗 [Abrir carpeta en Google Drive](https://drive.google.com/drive/folders/1y4VoyEVsQyzBrG7d4gqcnFJ6SJHvPHq1?usp=drive_link)
