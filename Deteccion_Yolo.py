@@ -21,35 +21,173 @@ from mysql.connector import Error
 from statsmodels.stats.outliers_influence import OLSInfluence
 
 class DBClient:
-    def __init__(self, host, user, password, database):
-        self.cfg = dict(host="localhost", user="root", password="", database=database, autocommit=True)
+    def __init__(self, host="localhost", user="root", password="", database=None):
+        self.cfg = dict(host=host, user=user, password=password, autocommit=True)
+        self.database = database
         self.conn = None
+
     def connect(self):
         if self.conn is None or not self.conn.is_connected():
             self.conn = mysql.connector.connect(**self.cfg)
+
     def close(self):
         if self.conn and self.conn.is_connected():
             self.conn.close()
-    def create_experiment(self, nombre, video_path, mask_path, escala):
+
+    def create_database(self, dbname):
         self.connect()
         cursor = self.conn.cursor()
-        query = ("INSERT INTO experiments (nombre, video_path, mask_path, escala) "
-                 "VALUES (%s, %s, %s, %s)")
-        cursor.execute(query, (nombre, video_path, mask_path, escala))
-        exp_id = cursor.lastrowid
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{dbname}`")
+        self.conn.database = dbname  # Cambia la base de datos activa
+        self.database = dbname
         cursor.close()
-        return exp_id
-    def insert_measurement(self, experiment_id, tiempo, radio, track_id):
+
+    def create_measurements_table(self):
         self.connect()
         cursor = self.conn.cursor()
-        query = ("INSERT INTO measurements (experiment_id, tiempo, radio, track_id) "
-                 "VALUES (%s, %s, %s, %s)")
-        cursor.execute(query, (experiment_id, tiempo, radio, track_id))
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS mediciones (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                tiempo FLOAT,
+                radio FLOAT,
+                track_id INT
+            )
+        """)
         cursor.close()
+
+    def insert_raw_measurement(self, tiempo, radio, track_id):
+        self.connect()
+        cursor = self.conn.cursor()
+        query = "INSERT INTO mediciones (tiempo, radio, track_id) VALUES (%s, %s, %s)"
+        cursor.execute(query, (tiempo, radio, track_id))
+        cursor.close()
+
+    def delete_all_measurements(self):
+        self.connect()
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM mediciones")
+        cursor.close()
+
+    def drop_measurements_table(self):
+        self.connect()
+        cursor = self.conn.cursor()
+        cursor.execute("DROP TABLE IF EXISTS mediciones")
+        cursor.close()
+
+    def drop_database(self, dbname):
+        self.connect()
+        cursor = self.conn.cursor()
+        cursor.execute(f"DROP DATABASE IF EXISTS `{dbname}`")
+        cursor.close()
+
+    def update_measurement(self, record_id, tiempo=None, radio=None, track_id=None):
+        self.connect()
+        cursor = self.conn.cursor()
+        updates = []
+        params = []
+
+        if tiempo is not None:
+            updates.append("tiempo = %s")
+            params.append(tiempo)
+        if radio is not None:
+            updates.append("radio = %s")
+            params.append(radio)
+        if track_id is not None:
+            updates.append("track_id = %s")
+            params.append(track_id)
+
+        if updates:
+            query = f"UPDATE mediciones SET {', '.join(updates)} WHERE id = %s"
+            params.append(record_id)
+            cursor.execute(query, params)
+        cursor.close()
+
 
 
 
 class ExperimentTab:
+
+    def __init__(self, notebook, app_ref, tab_name="Nuevo Experimento"):
+        self.app_ref = app_ref
+        self.notebook = notebook
+        self.tab_name = tab_name
+        self.frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.frame, text=tab_name)
+        self.notebook.select(self.frame)
+
+        # Toolbar
+        toolbar = ttk.Frame(self.frame)
+        toolbar.pack(fill=tk.X, pady=3)
+        ttk.Button(toolbar, text="＋ Nueva Pestaña", command=lambda: self.app_ref.add_new_tab()).pack(side=tk.LEFT, padx=5)
+        ttk.Button(toolbar, text="Pruebas de Diagnóstico", command=self.show_diagnostic_tests).pack(side=tk.LEFT, padx=5)
+
+        # Panel superior de controles
+        ctrl_frame = ttk.Frame(self.frame)
+        ctrl_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(ctrl_frame, text="Video: ").pack(side=tk.LEFT, padx=2)
+        self.video_entry = ttk.Entry(ctrl_frame, width=30)
+        self.video_entry.pack(side=tk.LEFT)
+        ttk.Button(ctrl_frame, text="Cargar Video", command=self.browse_video).pack(side=tk.LEFT, padx=2)
+
+        ttk.Label(ctrl_frame, text="Máscara: ").pack(side=tk.LEFT, padx=10)
+        self.mask_entry = ttk.Entry(ctrl_frame, width=30)
+        self.mask_entry.pack(side=tk.LEFT)
+        ttk.Button(ctrl_frame, text="Cargar Máscara", command=self.browse_mask).pack(side=tk.LEFT, padx=2)
+
+        ttk.Label(ctrl_frame, text="Escala (m/px): ").pack(side=tk.LEFT, padx=10)
+        self.scale_entry = ttk.Entry(ctrl_frame, width=10)
+        self.scale_entry.insert(0, "0,0")
+        self.scale_entry.pack(side=tk.LEFT)
+
+        ttk.Button(ctrl_frame, text="Procesar", command=self.process_video).pack(side=tk.LEFT, padx=10)
+        ttk.Button(ctrl_frame, text="Definir Escala Visual", command=self.definir_escala_visual).pack(side=tk.LEFT, padx=10)
+        ttk.Button(ctrl_frame, text="Actualizar Diagnóstico", command=lambda: (
+            self.residuals_panel.update_residual_plots(),
+            self.graph_plotter.update_plot(),
+            self.show_model_summary()
+        )).pack(side=tk.LEFT, padx=5)
+        ttk.Button(ctrl_frame, text="Importar CSV", command=self.importar_csv).pack(side=tk.LEFT, padx=5)
+
+        ttk.Button(ctrl_frame, text="Guardar en MySQL", command=self.guardar_en_mysql).pack(side=tk.LEFT, padx=5)
+
+        # Panel general
+        main_container = ttk.Frame(self.frame)
+        main_container.pack(fill=tk.BOTH, expand=True)
+        top_split = ttk.PanedWindow(main_container, orient=tk.HORIZONTAL)
+        top_split.pack(fill=tk.BOTH, expand=True)
+
+        # Tabla
+        table_frame = ttk.Frame(top_split)
+        self.tree = ttk.Treeview(table_frame, columns=("Tiempo", "Radio"), show="headings")
+        self.tree.heading("Tiempo", text="Tiempo (s)")
+        self.tree.heading("Radio", text="r (m)")
+        self.tree.pack(fill=tk.BOTH, expand=True)
+        top_split.add(table_frame, weight=1)
+
+        # Gráfico
+        graph_frame = ttk.Frame(top_split)
+        self.graph_plotter = GraphPlotter(parent=graph_frame, table=self.tree)
+        self.graph_plotter.update_plot()
+        top_split.add(graph_frame, weight=1)
+
+        # Modelo
+        self.model_summary_frame = ttk.LabelFrame(main_container, text="Resumen del Modelo Cuadrático")
+        self.model_summary_frame.pack(fill=tk.X, padx=5, pady=5)
+        self.model_tree = ttk.Treeview(
+            self.model_summary_frame,
+            columns=("Parámetro", "Estimación", "Error estándar", "t-valor", "p-valor"),
+            show='headings', height=4
+        )
+        for col in ("Parámetro", "Estimación", "Error estándar", "t-valor", "p-valor"):
+            self.model_tree.heading(col, text=col)
+            self.model_tree.column(col, width=100)
+        self.model_tree.pack(fill=tk.X)
+
+        # Residuales
+        diag_frame = ttk.LabelFrame(self.frame, text="Diagnósticos Residuales")
+        diag_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+        self.residuals_panel = ResidualsPlotter(parent=diag_frame, table=self.tree)
+        self.residuals_panel.update_residual_plots()
 
     def analizar_datos_de_tabla(self):
         data = [self.tree.item(c)['values'] for c in self.tree.get_children()]
@@ -73,131 +211,53 @@ class ExperimentTab:
             return
 
         try:
-            df = pd.read_csv(file_path, delimiter=';')
+            # Leer primera línea para detectar delimitador y encabezado
+            with open(file_path, 'r', encoding='utf-8-sig') as f:
+                first_line = f.readline().strip()
+                delimiter = ';' if ';' in first_line else ','
 
+            # Releer archivo completo
+            df = pd.read_csv(file_path, delimiter=delimiter, encoding='utf-8-sig')
+
+            # Normalizar encabezados
+            df.columns = [col.strip().replace('\ufeff', '') for col in df.columns]
+
+            # Asegurar columnas correctas
+            if not {'Tiempo', 'Radio'}.issubset(df.columns):
+                # Quizás es un archivo SIN encabezado, intenta cargar manualmente
+                df = pd.read_csv(file_path, delimiter=delimiter, header=None, names=["Tiempo", "Radio"])
+                df.columns = ["Tiempo", "Radio"]
+
+            # Validar de nuevo
             if not {'Tiempo', 'Radio'}.issubset(df.columns):
                 raise ValueError("El archivo debe tener columnas 'Tiempo' y 'Radio'.")
 
-            # Limpiar la tabla existente
+            # Limpiar tabla
             self.tree.delete(*self.tree.get_children())
 
-            # Insertar los datos en la tabla
+            # Insertar datos
             for _, row in df.iterrows():
-                tiempo = float(row['Tiempo'])
-                radio = float(row['Radio'])
+                tiempo = float(row["Tiempo"])
+                radio = float(row["Radio"])
                 self.tree.insert('', 'end', values=(f"{tiempo:.6f}", f"{radio:.6f}"))
 
             messagebox.showinfo("Importación exitosa", "Archivo CSV cargado correctamente.")
-
-            # Analizar automáticamente desde la tabla, sin guardar en MySQL
             self.frame.after(100, self.analizar_datos_de_tabla)
 
         except Exception as e:
             messagebox.showerror("Error al importar", str(e))
 
-    def __init__(self, notebook, app_ref, tab_name="Nuevo Experimento"):
-        self.app_ref = app_ref
-        self.notebook = notebook
-        self.frame = ttk.Frame(self.notebook)
+    def guardar_en_mysql(self):
+        dbname = self.tab_name.lower().replace(" ", "_")  # Por ejemplo: "Exp 1" → "exp_1"
+        client = DBClient()
+        client.create_database(dbname)
+        client.create_measurements_table()
 
-        # Añadimos la pestaña UNA SOLA VEZ
-        self.notebook.add(self.frame, text=tab_name)
-        self.notebook.select(self.frame)
+        for item in self.tree.get_children():
+            tiempo, radio, tid = self.tree.item(item)["values"]
+            client.insert_raw_measurement(float(tiempo), float(radio), int(tid))
 
-        # ——— Toolbar de pestaña ———
-        toolbar = ttk.Frame(self.frame)
-        toolbar.pack(fill=tk.X, pady=3)
-        ttk.Button(
-            toolbar,
-            text="＋ Nueva Pestaña",
-            command=lambda: self.app_ref.add_new_tab()
-        ).pack(side=tk.LEFT, padx=5)
-
-        # ——— Panel de controles arriba ———
-        ctrl_frame = ttk.Frame(self.frame)
-        ctrl_frame.pack(fill=tk.X, pady=5)
-
-        # Video
-        ttk.Label(ctrl_frame, text="Video: ").pack(side=tk.LEFT, padx=2)
-        self.video_entry = ttk.Entry(ctrl_frame, width=30)
-        self.video_entry.pack(side=tk.LEFT)
-        ttk.Button(ctrl_frame, text="Cargar Video", command=self.browse_video).pack(side=tk.LEFT, padx=2)
-
-        # Máscara
-        ttk.Label(ctrl_frame, text="Máscara: ").pack(side=tk.LEFT, padx=10)
-        self.mask_entry = ttk.Entry(ctrl_frame, width=30)
-        self.mask_entry.pack(side=tk.LEFT)
-        ttk.Button(ctrl_frame, text="Cargar Máscara", command=self.browse_mask).pack(side=tk.LEFT, padx=2)
-
-        # Escala
-        ttk.Label(ctrl_frame, text="Escala (m/px): ").pack(side=tk.LEFT, padx=10)
-        self.scale_entry = ttk.Entry(ctrl_frame, width=10)
-        self.scale_entry.insert(0, "0,0")
-        self.scale_entry.pack(side=tk.LEFT)
-
-        # Botones de procesamiento
-        ttk.Button(ctrl_frame, text="Procesar", command=self.process_video).pack(side=tk.LEFT, padx=10)
-        ttk.Button(ctrl_frame, text="Definir Escala Visual", command=self.definir_escala_visual).pack(side=tk.LEFT, padx=10)
-        ttk.Button(
-            ctrl_frame,
-            text="Actualizar Diagnóstico",
-            command=lambda: (
-                self.residuals_panel.update_residual_plots(),
-                self.graph_plotter.update_plot(),
-                self.show_model_summary()
-            )
-        ).pack(side=tk.LEFT, padx=5)
-        ttk.Button(
-            toolbar,
-            text="Pruebas de Diagnóstico",
-            command=self.show_diagnostic_tests
-        ).pack(side=tk.LEFT, padx=5)
-
-        ttk.Button(ctrl_frame, text="Importar CSV", command=self.importar_csv).pack(side=tk.LEFT, padx=5)
-
-        # ——— Panel de tabla y gráfico ———
-        # ——— Contenedor vertical general ———
-        main_container = ttk.Frame(self.frame)
-        main_container.pack(fill=tk.BOTH, expand=True)
-
-        # ——— Panel superior con tabla y gráfico lado a lado ———
-        top_split = ttk.PanedWindow(main_container, orient=tk.HORIZONTAL)
-        top_split.pack(fill=tk.BOTH, expand=True)
-
-        # Tabla de datos
-        table_frame = ttk.Frame(top_split)
-        self.tree = ttk.Treeview(table_frame, columns=("Tiempo", "Radio"), show="headings")
-        self.tree.heading("Tiempo", text="Tiempo (s)")
-        self.tree.heading("Radio", text="r (m)")
-        self.tree.pack(fill=tk.BOTH, expand=True)
-        top_split.add(table_frame, weight=1)
-
-        # Panel del resumen del modelo cuadrático
-        self.model_summary_frame = ttk.LabelFrame(main_container, text="Resumen del Modelo Cuadrático")
-        self.model_summary_frame.pack(fill=tk.X, padx=5, pady=5)
-
-        self.model_tree = ttk.Treeview(
-            self.model_summary_frame,
-            columns=("Parámetro", "Estimación", "Error estándar", "t-valor", "p-valor"),
-            show='headings',
-            height=4
-        )
-        for col in ("Parámetro", "Estimación", "Error estándar", "t-valor", "p-valor"):
-            self.model_tree.heading(col, text=col)
-            self.model_tree.column(col, width=100)
-        self.model_tree.pack(fill=tk.X)
-
-        # Gráfico de regresión
-        graph_frame = ttk.Frame(top_split)
-        self.graph_plotter = GraphPlotter(parent=graph_frame, table=self.tree)
-        self.graph_plotter.update_plot()
-        top_split.add(graph_frame, weight=1)
-
-        # Diagnósticos residuales
-        diag_frame = ttk.LabelFrame(self.frame, text="Diagnósticos Residuales")
-        diag_frame.pack(fill=tk.BOTH, expand=True, pady=5)
-        self.residuals_panel = ResidualsPlotter(parent=diag_frame, table=self.tree)
-        self.residuals_panel.update_residual_plots()
+        messagebox.showinfo("Guardado exitoso", f"Datos guardados en base '{dbname}'")
 
     def show_model_summary(self):
         data = [self.tree.item(c)['values'] for c in self.tree.get_children()]
@@ -331,47 +391,18 @@ class ExperimentTab:
         cv2.destroyAllWindows()
 
     def browse_video(self):
-        path = filedialog.askopenfilename(filetypes=[("Video files","*.mp4;*.avi"),("All files","*.*")])
+        path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4;*.avi"), ("All files", "*.*")])
         if path:
             self.video_path = path
-            self.video_entry.delete(0, tk.END); self.video_entry.insert(0, path)
+            self.video_entry.delete(0, tk.END)
+            self.video_entry.insert(0, path)
 
     def browse_mask(self):
-        path = filedialog.askopenfilename(filetypes=[("Image files","*.png;*.jpg"),("All files","*.*")])
+        path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg"), ("All files", "*.*")])
         if path:
             self.mask_path = path
-            self.mask_entry.delete(0, tk.END); self.mask_entry.insert(0, path)
-
-    def importar_csv(self):
-        file_path = filedialog.askopenfilename(
-            title="Seleccionar archivo CSV",
-            filetypes=[("CSV files", "*.csv"), ("Todos los archivos", "*.*")]
-        )
-        if not file_path:
-            return
-
-        try:
-            df = pd.read_csv(file_path, delimiter=';')
-
-            if not {'Tiempo', 'Radio'}.issubset(df.columns):
-                raise ValueError("El archivo debe tener columnas 'Tiempo' y 'Radio'.")
-
-            # Limpiar la tabla existente
-            self.tree.delete(*self.tree.get_children())
-
-            # Insertar los datos en la tabla
-            for _, row in df.iterrows():
-                tiempo = float(row['Tiempo'])
-                radio = float(row['Radio'])
-                self.tree.insert('', 'end', values=(f"{tiempo:.6f}", f"{radio:.6f}"))
-
-            messagebox.showinfo("Importación exitosa", "Archivo CSV cargado correctamente.")
-
-            # Analizar automáticamente desde la tabla
-            self.frame.after(100, self.analizar_datos_de_tabla)
-
-        except Exception as e:
-            messagebox.showerror("Error al importar", str(e))
+            self.mask_entry.delete(0, tk.END)
+            self.mask_entry.insert(0, path)
 
     def process_video(self):
         # 1) Leer y validar escala
@@ -412,7 +443,6 @@ class ExperimentTab:
         threading.Thread(target=self.processor.process_video, daemon=True).start()
 
     def get_state(self):
-        # Obtener estado de la pestaña para guardar
         table_data = [self.tree.item(i)["values"] for i in self.tree.get_children()]
         return {
             "video_path": self.video_path,
@@ -423,18 +453,15 @@ class ExperimentTab:
 
     @classmethod
     def from_state(cls, notebook, state):
-        # Crear pestaña a partir del estado cargado
-        tab = cls(notebook, tab_name="Loaded Experiment")
-        tab.video_path = state.get("video_path","")
-        tab.mask_path = state.get("mask_path","")
-        tab.scale_points = state.get("scale_points",[0,0])
-        # Llenar campos de entrada
+        tab = cls(notebook, app_ref=None, tab_name="Loaded Experiment")
+        tab.video_path = state.get("video_path", "")
+        tab.mask_path = state.get("mask_path", "")
+        tab.scale_points = state.get("scale_points", [0, 0])
         tab.video_entry.insert(0, tab.video_path)
         tab.mask_entry.insert(0, tab.mask_path)
         tab.scale_entry.delete(0, tk.END)
         tab.scale_entry.insert(0, f"{tab.scale_points[0]},{tab.scale_points[1]}")
-        # Llenar tabla si hay datos guardados
-        for row in state.get("table_data",[]):
+        for row in state.get("table_data", []):
             tab.tree.insert("", "end", values=row)
         return tab
 
@@ -678,92 +705,94 @@ class GraphPlotter:
 class ResidualsPlotter:
     def __init__(self, parent, table):
         self.table = table
-        # Frame dedicado para los 8 gráficos de diagnóstico
         self.frame = tk.Frame(parent)
         self.frame.pack(fill=tk.BOTH, expand=True)
 
-        # Crear figura con layout y canvas
         from matplotlib.figure import Figure
         self.fig = Figure(figsize=(10, 12), constrained_layout=True)
-        # Generar los ejes en la figura
         self.axes = self.fig.subplots(4, 2)
 
-        # Canvas de Matplotlib dentro del frame
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
+    def _extract_data_from_table(self):
+        data = [self.table.item(child)["values"] for child in self.table.get_children()]
+        if not data:
+            return None, None
+        t = np.array([float(row[0]) for row in data])
+        r = np.array([float(row[1]) for row in data])
+        return t, r
+
+    def _prepare_model(self, t, r):
+        X = np.column_stack((t**2, t, np.ones_like(t)))
+        model = sm.OLS(r, X).fit()
+        influence = OLSInfluence(model)
+        d = np.linalg.norm(X - X.mean(axis=0), axis=1)
+        return model, influence, d
+
     def update_residual_plots(self):
-        # Limpiar figura y volver a crear ejes para evitar retoques previos
         self.fig.clf()
         self.axes = self.fig.subplots(4, 2)
 
-        # Obtener datos de la tabla
-        data = [self.table.item(child)["values"] for child in self.table.get_children()]
-        if not data:
+        t, r = self._extract_data_from_table()
+        if t is None:
             return
 
-        # Preparar arrays
-        t = np.array([float(row[0]) for row in data])
-        r = np.array([float(row[1]) for row in data])
-        X = np.column_stack((t**2, t, np.ones_like(t)))
-        model = sm.OLS(r, X).fit()
-        fitted = model.fittedvalues
-        influence = OLSInfluence(model)
+        model, influence, d = self._prepare_model(t, r)
 
         residuals = model.resid
+        fitted = model.fittedvalues
         studentized = influence.resid_studentized_external
         standardized = influence.resid_studentized_internal
         leverage = influence.hat_matrix_diag
-        d = np.linalg.norm(X - X.mean(axis=0), axis=1)
+        cooks_d = influence.cooks_distance[0]
 
         axs = self.axes.flatten()
 
-        # 1. QQ-Plot de residuales studentizados
+        # 1. QQ-Plot
         qqplot(studentized, line='45', ax=axs[0], markersize=1)
         axs[0].set_title("QQ-Plot de residuales studentizados")
 
-        # 2. Histograma de residuales + curva normal
+        # 2. Histograma
         axs[1].hist(residuals, bins=20, density=True, alpha=0.6)
         x_vals = np.linspace(*axs[1].get_xlim(), 100)
         pdf = stats.norm.pdf(x_vals, residuals.mean(), residuals.std())
         axs[1].plot(x_vals, pdf, '--')
         axs[1].set_title("Histograma de residuales")
 
-        # 3. Boxplot de residuales
+        # 3. Boxplot
         axs[2].boxplot(residuals, vert=False)
         axs[2].set_title("Boxplot de residuales")
 
-        # 4. Residuales estandarizados vs valores ajustados
+        # 4. Std resid vs fitted
         axs[3].scatter(fitted, standardized, s=1)
         axs[3].axhline(0, linestyle='--')
         axs[3].set_title("Residuales estandarizados vs ajustados")
         axs[3].set_xlabel("Valores ajustados")
         axs[3].set_ylabel("Residuales estandarizados")
 
-        # 5. Residuales estandarizados vs distancia d
+        # 5. Std resid vs distancia
         axs[4].scatter(d, standardized, s=1)
         axs[4].axhline(0, linestyle='--')
         axs[4].set_title("Residuales estandarizados vs distancia d")
         axs[4].set_xlabel("Distancia d")
 
-        # 6. Residuales vs orden de observación
+        # 6. Resid vs orden
         axs[5].scatter(range(len(residuals)), residuals, s=1)
         axs[5].set_title("Residuales vs orden de observación")
 
-        # 7. Influencia: residuales studentizados vs apalancamiento
+        # 7. Std resid vs leverage
         axs[6].scatter(leverage, studentized, s=1)
         axs[6].axhline(0, linestyle='--')
         axs[6].set_title("Residuales estandarizados vs leverage")
         axs[6].set_xlabel("Leverage")
 
-        # 8. Residuos estandarizados vs Cook's distance
-        cooks_d = influence.cooks_distance[0]
+        # 8. Std resid vs Cook's
         axs[7].scatter(cooks_d, standardized, s=1)
         axs[7].axhline(0, linestyle='--')
         axs[7].set_title("Residuales estandarizados vs Distancia de Cook")
         axs[7].set_xlabel("Distancia de Cook")
 
-        # Renderizar todos los subplots
         self.canvas.draw()
 
 
