@@ -113,7 +113,14 @@ Frecuencia de aparición de cada clase en el conjunto de entrenamiento.
 
 ---
 
-### 8. Predicción en lotes de entrenamiento
+### 8. Resultados
+En conjunto, los gráficos evidencian un entrenamiento estable, donde las pérdidas disminuyen y las métricas de desempeño aumentan, sin señales claras de sobreajuste.
+
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/imagenes/results.jpg" width="520"/>
+
+---
+
+### 9. Predicción en lotes de entrenamiento
 Visualización de las detecciones en entrenamiento.
 
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch0.jpg" width="520"/>
