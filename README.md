@@ -52,7 +52,7 @@ El archivo `wheel.pt` no se encuentra en este repositorio debido a su tamaño.
 
 El siguiente diagrama representa la arquitectura del sistema, incluyendo la interacción entre las clases `App`, `ExperimentTab`, `VideoProcessor`, `DBClient`, entre otras.
 
-![Diagrama de Clases UML](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/docs/UML_class_diagram.png)
+![Diagrama de Clases UML](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/docs/UML_class_diagram.svg)
 
 > *Figura 1.* Diagrama UML generado con PlantUML.
 
