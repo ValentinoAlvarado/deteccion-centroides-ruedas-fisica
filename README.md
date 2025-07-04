@@ -116,7 +116,7 @@ Frecuencia de aparición de cada clase en el conjunto de entrenamiento.
 ### 8. Resultados
 En conjunto, los gráficos evidencian un entrenamiento estable, donde las pérdidas disminuyen y las métricas de desempeño aumentan, sin señales claras de sobreajuste.
 
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/results.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/results.png" width="520"/>
 
 ---
 
