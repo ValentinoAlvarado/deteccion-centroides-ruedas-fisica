@@ -105,74 +105,32 @@ Frecuencia de aparición de cada clase en el conjunto de entrenamiento.
 
 ---
 
-### 8. Predicción en lote de validación 0  
-Ejemplo visual con las detecciones generadas por el modelo.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_pred.jpg" width="520"/>
-
----
-
-### 9. Etiquetas reales en lote de validación 0  
-Corresponde al mismo conjunto del ejemplo anterior, pero con etiquetas reales.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_truth.jpg" width="520"/>
-
----
-
-### 10. Predicción en lote de entrenamiento 0  
+### 8. Predicción en lotes de entrenamiento
 Visualización de las detecciones en entrenamiento.
 
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch0_pred.jpg" width="520"/>
-
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch0.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch1.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch2.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579601.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579602.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579602.jpg" width="520"/>
 ---
 
-### 11. Etiquetas reales en lote de entrenamiento 0  
+### 9. Visualización del conjunto de validación – Predicciones
+Ejemplos visuales con las detecciones generadas por el modelo.
+
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_pred.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_pred.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_pred.jpg" width="520"/>
+---
+
+### 10. Visualización del conjunto de validación – Etiquetas 
 Muestra las anotaciones reales sobre las imágenes de entrenamiento.
 
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch0_truth.jpg" width="520"/>
-
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_labels.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_labels.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_labels.jpg" width="520"/>
 ---
-
-### 12. Predicción en lote de validación 1  
-Evaluación visual de un segundo lote en validación.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_pred.jpg" width="520"/>
-
----
-
-### 13. Etiquetas reales en lote de validación 1  
-Correspondencia visual con las etiquetas del mismo lote anterior.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_truth.jpg" width="520"/>
-
----
-
-### 14. Predicción en lote de entrenamiento 1  
-Predicciones del modelo sobre otro conjunto de entrenamiento.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch1_pred.jpg" width="520"/>
-
----
-
-### 15. Etiquetas reales en lote de entrenamiento 1  
-Muestra la realidad de anotaciones para el lote anterior.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch1_truth.jpg" width="520"/>
-
----
-
-### 16. Predicción en lote de validación 2  
-Permite ver cómo generaliza el modelo en nuevos datos.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_pred.jpg" width="520"/>
-
----
-
-### 17. Etiquetas reales en lote de validación 2  
-Base para comparar qué tan bien predijo el modelo en validación.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_truth.jpg" width="520"/>
-
 
 ---
 ## 📊 Comparación con método tradicional (R)
