@@ -62,6 +62,10 @@ El siguiente diagrama representa la arquitectura del sistema, incluyendo la inte
 > No forman parte directa del código fuente, sino que sirven como referencia visual  
 > para comparar el rendimiento del modelo con métodos tradicionales.
 
+## Video demostrativo
+
+
+
 ---
 
 ### 1. Curva F1  
