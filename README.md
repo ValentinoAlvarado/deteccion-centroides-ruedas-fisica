@@ -111,17 +111,9 @@ Visualización de las detecciones en entrenamiento.
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch0.jpg" width="520"/>
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch1.jpg" width="520"/>
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch2.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579600.jpg" width="520"/>
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579601.jpg" width="520"/>
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579602.jpg" width="520"/>
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/train_batch579602.jpg" width="520"/>
----
-
-### 9. Visualización del conjunto de validación – Predicciones
-Ejemplos visuales con las detecciones generadas por el modelo.
-
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_pred.jpg" width="520"/>
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_pred.jpg" width="520"/>
-<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_pred.jpg" width="520"/>
 ---
 
 ### 10. Visualización del conjunto de validación – Etiquetas 
@@ -130,6 +122,14 @@ Muestra las anotaciones reales sobre las imágenes de entrenamiento.
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_labels.jpg" width="520"/>
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_labels.jpg" width="520"/>
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_labels.jpg" width="520"/>
+---
+
+### 9. Visualización del conjunto de validación – Predicciones
+Ejemplos visuales con las detecciones generadas por el modelo.
+
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_pred.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch1_pred.jpg" width="520"/>
+<img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_pred.jpg" width="520"/>
 ---
 
 ---
