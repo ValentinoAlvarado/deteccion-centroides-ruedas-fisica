@@ -139,7 +139,7 @@ Muestra las anotaciones reales sobre las imágenes de entrenamiento.
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch2_labels.jpg" width="520"/>
 ---
 
-### 9. Visualización del conjunto de validación – Predicciones
+### 11. Visualización del conjunto de validación – Predicciones
 Ejemplos visuales con las detecciones generadas por el modelo.
 
 <img src="https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/train/val_batch0_pred.jpg" width="520"/>
