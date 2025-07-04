@@ -64,7 +64,9 @@ El siguiente diagrama representa la arquitectura del sistema, incluyendo la inte
 
 ## Video demostrativo
 
+📁 Puedes descargarlo desde esta carpeta de Google Drive:
 
+🔗 [Abrir carpeta en Google Drive](https://drive.google.com/drive/folders/1yzC-9sHNsGsc3Uk7u19X5VRX33Qq26QP?usp=drive_link)
 
 ---
 
