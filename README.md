@@ -48,6 +48,14 @@ El archivo `wheel.pt` no se encuentra en este repositorio debido a su tamaño.
 🔗 [Abrir carpeta en Google Drive](https://drive.google.com/drive/folders/1y4VoyEVsQyzBrG7d4gqcnFJ6SJHvPHq1?usp=drive_link)
 ```
 
+### 📘 Diagrama de Clases del Proyecto
+
+El siguiente diagrama representa la arquitectura del sistema, incluyendo la interacción entre las clases `App`, `ExperimentTab`, `VideoProcessor`, `DBClient`, entre otras.
+
+![Diagrama de Clases UML](https://raw.githubusercontent.com/ValentinoAlvarado/deteccion-centroides-ruedas-fisica/master/docs/diagrama_clases.png)
+
+> *Figura 1.* Diagrama UML generado con PlantUML.
+
 ## 📊 Visualización de resultados del entrenamiento (YOLOv8)
 
 > Las siguientes imágenes fueron generadas automáticamente por el framework Ultralytics YOLOv8.  
